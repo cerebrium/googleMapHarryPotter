@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, TextInput, ImageBackground, Button } from 'reac
 import titleBackground from './cobro-titleScreen.jpg'
 import { NativeRouter as Router, Route, Link } from "react-router-native"
 import MapPage from './routes/map'
+import Home from './routes/home'
+import DiagonAlley from './routes/diagonAlley'
 
 const App = () => {
   // state
@@ -12,7 +14,6 @@ const App = () => {
 
   // function to send to backend
   const susbmitInfo = (e) => {
-    console.log('state: ' + userEmail + ' other comment')
     fetch('http://10.1.7.200:3001/auth/signup', {
       method: 'POST',
       headers: {
@@ -27,7 +28,6 @@ const App = () => {
     .then((response) => response.json())
     .then((responseJson) => {
       setUser(responseJson)
-      console.log(responseJson)
     })
   }
 
@@ -36,7 +36,9 @@ const App = () => {
   if (user) {
     userNameGotten = (
       <Router>
-        <Route exact path='/' component={MapPage}/>
+        <Route exact path='/' component={Home}/>
+        <Route exact path='/map' component={MapPage}/>
+        <Route exact path='/diagonalley' component={DiagonAlley}/>
       </Router>
     )
   } else {
