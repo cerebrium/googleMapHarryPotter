@@ -5,14 +5,14 @@ import brickImage from '../waldemar-brandt-bricks.jpg'
 
 const DiagonAlley = () => {
 
-    const [ leftOffset, setLeftOffset ] = useState(-100)
+    const [ leftOffset, setLeftOffset ] = useState(-1000)
     const [ topOffset, setTopOffset ] = useState(50)
+    const [ winCounter, setWinCounter ] = useState(0)
 
     useEffect( ()=> {
         try {
             // works in the simulator
             Geolocation.getCurrentPosition((locationData) => {
-              console.log('latitude: ', locationData.coords.latitude, 'longitude: ', locationData.coords.longitude)
               setUserLatitude(locationData.coords.latitude)
               setUserLongitude(locationData.coords.longitude)
             });
@@ -28,87 +28,83 @@ const DiagonAlley = () => {
           } catch (error) {
             console.log('error: ', error)
           }
-    })
+    }, [])
     useEffect( () => {
         // make the bricks appear lots of places
-        // first
-        setTimeout(() => {
-            setLeftOffset(75)
-            setTopOffset(300)
-        }, 3000)
-
-        // second
-        setTimeout(() => {
-            setLeftOffset(10)
-            setTopOffset(500)
-        }, 6000)
-
-        // third
-        setTimeout(() => {
-            setLeftOffset(25)
-            setTopOffset(50)
-        }, 9000)
-
-        // fourth
-        setTimeout(() => {
-            setLeftOffset(150)
-            setTopOffset(600)
-        }, 12000)
-
-        // fifth
-        setTimeout(() => {
-            setLeftOffset(50)
-            setTopOffset(100)
-        }, 15000)
-    })
+        setInterval(() => {
+            let x = Math.floor(Math.random() * Math.floor(300))
+            let y = Math.floor(Math.random() * Math.floor(750))
+            console.log(x, y)
+            setLeftOffset(x)
+            setTopOffset(y)
+        }, 1000)
+    }, [])
     
-    
-    return (
-        <>
+    var content
+    if (winCounter < 6) {
+        content = (
             <View style={styles.overallContainer}>
-                <View style={styles.navBar}>
-                    <Link to="/"><Text style={styles.linkStyle}>Home | </Text></Link>
-                    <Link to="/map"><Text style={styles.linkStyle}>Map | </Text></Link>
-                    <Link to="/diagonalley"><Text style={styles.linkStyle}>Diagon Alley</Text></Link>
-                </View>
+                <View style={styles.titleContent}>
+                    <View style={styles.navBar}>
+                        <Link to="/"><Text style={styles.linkStyle}>Home | </Text></Link>
+                        <Link to="/map"><Text style={styles.linkStyle}>Map | </Text></Link>
+                        <Link to="/diagonalley"><Text style={styles.linkStyle}>Diagon Alley</Text></Link>
+                    </View>
                     <Text style={styles.titleText}>
                         Diagon Alley
                     </Text>
-                    <TouchableOpacity
-                        onPress={ ()=>{
-                            alert('hello')
+                    <Text style={styles.titleText}>{winCounter}</Text>
+                </View>
+                <TouchableOpacity
+                    onPress={ ()=>{
+                        let myNumber = winCounter
+                        myNumber++
+                        setWinCounter(myNumber)
+                    }}
+                    style={{
+                        marginBottom: topOffset,
+                        marginLeft: leftOffset,
+                        height: 30,
+                        width: 50,
+                        zIndex: 0, 
+                    }}
+                > 
+                    <Image 
+                        source={brickImage}
+                        style={{
+                            height: '100%',
+                            width: '100%'
                         }}
-                    > 
-                        <Image 
-                            source={brickImage}
-                            style={{
-                                marginTop: topOffset,
-                                marginLeft: leftOffset,
-                                height: 50,
-                                width: 50,
-                                borderRadius: 50,
-                                zIndex: 0, 
-                            }}
-                        />     
-                    </TouchableOpacity>   
+                    />     
+                </TouchableOpacity>   
             </View>
+        )
+    } else {
+        content = (
+            <>
+                <View style={styles.overallContainer}>
+                    <Text style={styles.titleText}>YOU WIN</Text>
+                </View>
+            </>
+        )
+    }
+    return (
+        <>
+            {content}
         </>
     )
 }
 
 const styles = StyleSheet.create({
     overallContainer: {
-        justifyContent: 'flex-start',
-        alignItems: 'center',
         flex: 1,
-        backgroundColor: 'black'
+        backgroundColor: 'black',
+        height: '100%',
+        width: '100%'
     },
     navBar: {
         paddingTop: 40,
-        flexDirection: 'row',
-    },
-    contentContainer: {
-        paddingTop: 25,
+        flexDirection: 'row'
     },
     linkStyle: {
       color: 'gold',
@@ -117,6 +113,10 @@ const styles = StyleSheet.create({
     titleText: {
         color: 'red',
         fontSize: 30,
+    },
+    titleContent: {
+        flex: 1,
+        alignItems: 'center'
     }
   });
 
