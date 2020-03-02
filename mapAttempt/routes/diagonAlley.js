@@ -29,15 +29,28 @@ const DiagonAlley = () => {
             console.log('error: ', error)
           }
     }, [])
-    useEffect( () => {
-        // make the bricks appear lots of places
-        setInterval(() => {
-            let x = Math.floor(Math.random() * Math.floor(300))
-            let y = Math.floor(Math.random() * Math.floor(750))
-            console.log(x, y)
-            setLeftOffset(x)
-            setTopOffset(y)
-        }, 1000)
+
+    // interval for making the bricks appear and dissapoear
+    var myFunction = (conditionalizer) => {
+        if (conditionalizer === 0) {
+            console.log('conditionalizer: ', conditionalizer)
+            let changeLocationOfBrick = () => {
+                let x = Math.floor(Math.random() * Math.floor(300))
+                let y = Math.floor(Math.random() * Math.floor(750))
+                console.log(x, y)
+                setLeftOffset(x)
+                setTopOffset(y)
+            }
+            var myInterval = setInterval(changeLocationOfBrick, 1000)
+        } else {
+            console.log('in the clearing portion')
+            clearInterval(myInterval)
+            console.log('did it get here?')
+        }
+    }
+    useEffect(() => {
+        console.log('useeffect called')
+        myFunction(0)
     }, [])
     
     var content
@@ -53,12 +66,18 @@ const DiagonAlley = () => {
                     <Text style={styles.titleText}>
                         Diagon Alley
                     </Text>
+                    <Text>
+                        collect 10 bricks to enter
+                    </Text>
                     <Text style={styles.titleText}>{winCounter}</Text>
                 </View>
                 <TouchableOpacity
                     onPress={ ()=>{
                         let myNumber = winCounter
                         myNumber++
+                        if (myNumber === 6) {
+                            myFunction(1)
+                        }
                         setWinCounter(myNumber)
                     }}
                     style={{
@@ -82,8 +101,10 @@ const DiagonAlley = () => {
     } else {
         content = (
             <>
-                <View style={styles.overallContainer}>
+                <View style={styles.overallContainerWin}>
                     <Text style={styles.titleText}>YOU WIN</Text>
+                    <Text style={styles.titleText}>CODE: ButterBeerFTW</Text>
+                    <Link to='/'><Text style={styles.titleText}>Home</Text></Link>
                 </View>
             </>
         )
@@ -101,6 +122,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         height: '100%',
         width: '100%'
+    },
+    overallContainerWin: {
+        flex: 1,
+        backgroundColor: 'black',
+        height: '100%',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     navBar: {
         paddingTop: 40,
