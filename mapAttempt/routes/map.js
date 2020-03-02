@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     
   },
   linkStyle: {
-    color: 'white',
+    color: 'gold',
     fontSize: 20
   }
 });

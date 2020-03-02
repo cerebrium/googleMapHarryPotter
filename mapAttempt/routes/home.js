@@ -35,12 +35,12 @@ const styles = StyleSheet.create({
         paddingTop: 25,
     },
     linkStyle: {
-      color: 'white',
+      color: 'gold',
       fontSize: 20
     },
     titleText: {
-        color: 'white',
-        fontSize: 20
+        color: 'red',
+        fontSize: 30
     }
   });
 
