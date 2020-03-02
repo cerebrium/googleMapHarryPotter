@@ -5,12 +5,17 @@ import { NativeRouter as Router, Route, Link } from "react-router-native"
 import Geolocation from '@react-native-community/geolocation';
 
 const MapPage = () => {
-  const [ userLocation, setUserLocation ] = useState('')
+  const [ userLatitude, setUserLatitude ] = useState(0)
+  const [ userLongitude, setUserLongitude ] = useState(0)
 
   useEffect( ()=> {
     try {
       // works in the simulator
-      Geolocation.getCurrentPosition(info => console.log(info));
+      Geolocation.getCurrentPosition((locationData) => {
+        console.log('latitude: ', locationData.coords.latitude, 'longitude: ', locationData.coords.longitude)
+        setUserLatitude(locationData.coords.latitude)
+        setUserLongitude(locationData.coords.longitude)
+      });
 
       // works in xpo and maybe deployment?
       // navigator.geolocation.getCurrentPosition( (returnedLocation) => {
@@ -24,8 +29,9 @@ const MapPage = () => {
     }
   }, [])
 
-  return (
-    <>
+  var content
+  if (userLatitude !== 0) {
+    content = (
       <View style={styles.overallContainer}>
         <View style={styles.navBar}>
           <Link to="/"><Text style={styles.linkStyle}>Home | </Text></Link>
@@ -36,6 +42,7 @@ const MapPage = () => {
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={styles.map}
           region={{
+            // for deployment will want to change this to be actual location
             latitude: 47.6048,
             longitude: -122.3375,
             latitudeDelta: 0.015,
@@ -47,9 +54,23 @@ const MapPage = () => {
               latitude: 47.6048,
               longitude: -122.3375
             }}  
+            title={'First Location'}
+            description={'Locate the secret entrance to Diagon Alley!'}
           />
         </MapView>
       </View>
+    )
+  } else {
+    content = (
+    <> 
+      <Text>Loading...</Text>
+    </>
+    )
+  }
+
+  return (
+    <>
+      {content}
     </>
   );
 };
