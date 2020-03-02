@@ -1,9 +1,12 @@
 import React, { useEffect, useState} from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import {Text, View, StyleSheet, Image, ImageBackground, Button, TouchableOpacity} from 'react-native';
 import { NativeRouter as Router, Route, Link } from "react-router-native"
 import brickImage from '../waldemar-brandt-bricks.jpg'
 
 const DiagonAlley = () => {
+
+    const [ leftOffset, setLeftOffset ] = useState(-100)
+    const [ topOffset, setTopOffset ] = useState(50)
 
     useEffect( ()=> {
         try {
@@ -26,8 +29,40 @@ const DiagonAlley = () => {
             console.log('error: ', error)
           }
     })
-    
+    useEffect( () => {
+        // make the bricks appear lots of places
+        // first
+        setTimeout(() => {
+            setLeftOffset(75)
+            setTopOffset(300)
+        }, 3000)
 
+        // second
+        setTimeout(() => {
+            setLeftOffset(10)
+            setTopOffset(500)
+        }, 6000)
+
+        // third
+        setTimeout(() => {
+            setLeftOffset(25)
+            setTopOffset(50)
+        }, 9000)
+
+        // fourth
+        setTimeout(() => {
+            setLeftOffset(150)
+            setTopOffset(600)
+        }, 12000)
+
+        // fifth
+        setTimeout(() => {
+            setLeftOffset(50)
+            setTopOffset(100)
+        }, 15000)
+    })
+    
+    
     return (
         <>
             <View style={styles.overallContainer}>
@@ -39,17 +74,23 @@ const DiagonAlley = () => {
                     <Text style={styles.titleText}>
                         Diagon Alley
                     </Text>
-                <View style={styles.circleTrace}>
-                    <Image 
-                        style={{
-                            marginTop: 50,
-                            height: 550,
-                            width: 250,
-                            borderRadius: 50
+                    <TouchableOpacity
+                        onPress={ ()=>{
+                            alert('hello')
                         }}
-                        source={brickImage}
-                    />
-                </View>    
+                    > 
+                        <Image 
+                            source={brickImage}
+                            style={{
+                                marginTop: topOffset,
+                                marginLeft: leftOffset,
+                                height: 50,
+                                width: 50,
+                                borderRadius: 50,
+                                zIndex: 0, 
+                            }}
+                        />     
+                    </TouchableOpacity>   
             </View>
         </>
     )
