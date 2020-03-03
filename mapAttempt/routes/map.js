@@ -67,8 +67,8 @@ const MapPage = (props) => {
           style={styles.map}
           region={{
             // for deployment will want to change this to be actual location
-            latitude: 47.6048,
-            longitude: -122.3375,
+            latitude: markerLat,
+            longitude: markerLong,
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
           }}
