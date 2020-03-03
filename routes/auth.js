@@ -19,4 +19,24 @@ router.post('/signup', (req, res) => {
     })
 })
 
+router.post('/diagonalley', (req, res) => {
+    // find user
+    console.log('route hit req: ', req.body)
+    User.findOne({ email: req.body.email }, (err, user) => {
+        console.log('route hit and user found: ', user)
+        if (user.events) {
+            let currentUserEvents = [...user.events]
+            currentUserEvents.push(0)
+            user.events = currentUserEvents
+            user.save()
+            console.log('user: ', user)
+        } else {
+            user.events = [0]
+            user.save()
+            console.log('user: ', user)
+        }
+        res.json(user)
+    })
+})
+
 module.exports = router;

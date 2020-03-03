@@ -36,9 +36,9 @@ const App = () => {
   if (user) {
     userNameGotten = (
       <Router>
-        <Route exact path='/' component={Home}/>
-        <Route exact path='/map' component={MapPage}/>
-        <Route exact path='/diagonalley' component={DiagonAlley}/>
+        <Route exact path='/' render = { () => <Home user={user} /> } /> 
+        <Route exact path='/map' render = { () => <MapPage user={user} /> } /> 
+        <Route exact path='/diagonalley' render = { () => <DiagonAlley user={user} /> } />
       </Router>
     )
   } else {

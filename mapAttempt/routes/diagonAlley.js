@@ -6,11 +6,12 @@ import entranceGif from '../diagonAlley.gif'
 
 
 var myInterval
-const DiagonAlley = () => {
+const DiagonAlley = (props) => {
 
     const [ leftOffset, setLeftOffset ] = useState(-1000)
     const [ topOffset, setTopOffset ] = useState(50)
     const [ winCounter, setWinCounter ] = useState(0)
+    const [ user, setUser ] = useState(null)
 
     useEffect( ()=> {
         try {
@@ -31,6 +32,26 @@ const DiagonAlley = () => {
           } catch (error) {
             console.log('error: ', error)
           }
+            fetch('http://10.1.7.200:3001/auth/signup', {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                name: props.user.name,
+                email: props.user.email,
+              }),
+            })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              setUser(responseJson)
+              console.log('responseJson: ', responseJson)
+              if (responseJson.events.length > 0) {
+                  setWinCounter(20)
+                  myFunction(1)
+              }
+            })
     }, [])
 
     
@@ -44,6 +65,7 @@ const DiagonAlley = () => {
                 setLeftOffset(x)
                 setTopOffset(y)
                 console.log('interval tick')
+                console.log(user)
             }
             myInterval = setInterval(changeLocationOfBrick, 1000)
         } else {
@@ -99,7 +121,7 @@ const DiagonAlley = () => {
                 </TouchableOpacity>   
             </View>
         )
-    } else if (winCounter === 20) {
+    } else if (winCounter === 20 || user.events.length > 0) {
         content = (
             <>
                 <View style={styles.overallContainerWin}>
@@ -113,6 +135,18 @@ const DiagonAlley = () => {
         setTimeout( () => {
             setWinCounter(20)
             myFunction(1)
+            console.log('in the timeout ', props.user.email)
+            // send a 'mission accomplished' to backend
+            fetch('http://10.1.7.200:3001/auth/diagonalley', {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  email: props.user.email,
+                }),
+              })
         }, 15000)
         content = (
             <>
