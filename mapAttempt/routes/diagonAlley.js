@@ -2,7 +2,10 @@ import React, { useEffect, useState} from 'react';
 import {Text, View, StyleSheet, Image, ImageBackground, Button, TouchableOpacity} from 'react-native';
 import { NativeRouter as Router, Route, Link } from "react-router-native"
 import brickImage from '../waldemar-brandt-bricks.jpg'
+import entranceGif from '../diagonAlley.gif'
 
+
+var myInterval
 const DiagonAlley = () => {
 
     const [ leftOffset, setLeftOffset ] = useState(-1000)
@@ -30,31 +33,29 @@ const DiagonAlley = () => {
           }
     }, [])
 
+    
     // interval for making the bricks appear and dissapoear
     var myFunction = (conditionalizer) => {
+        // creating the interval that makes the bricks appear
         if (conditionalizer === 0) {
-            console.log('conditionalizer: ', conditionalizer)
             let changeLocationOfBrick = () => {
                 let x = Math.floor(Math.random() * Math.floor(300))
                 let y = Math.floor(Math.random() * Math.floor(750))
-                console.log(x, y)
                 setLeftOffset(x)
                 setTopOffset(y)
+                console.log('interval tick')
             }
-            var myInterval = setInterval(changeLocationOfBrick, 1000)
+            myInterval = setInterval(changeLocationOfBrick, 1000)
         } else {
-            console.log('in the clearing portion')
             clearInterval(myInterval)
-            console.log('did it get here?')
         }
     }
     useEffect(() => {
-        console.log('useeffect called')
         myFunction(0)
     }, [])
     
     var content
-    if (winCounter < 6) {
+    if (winCounter < 1) {
         content = (
             <View style={styles.overallContainer}>
                 <View style={styles.titleContent}>
@@ -75,7 +76,7 @@ const DiagonAlley = () => {
                     onPress={ ()=>{
                         let myNumber = winCounter
                         myNumber++
-                        if (myNumber === 6) {
+                        if (myNumber === 1) {
                             myFunction(1)
                         }
                         setWinCounter(myNumber)
@@ -98,13 +99,32 @@ const DiagonAlley = () => {
                 </TouchableOpacity>   
             </View>
         )
-    } else {
+    } else if (winCounter === 20) {
         content = (
             <>
                 <View style={styles.overallContainerWin}>
-                    <Text style={styles.titleText}>YOU WIN</Text>
+                    <Text style={styles.titleText}>Welcome To DIAGON ALLEY</Text>
                     <Text style={styles.titleText}>CODE: ButterBeerFTW</Text>
                     <Link to='/'><Text style={styles.titleText}>Home</Text></Link>
+                </View>
+            </>
+        )
+    } else {
+        setTimeout( () => {
+            setWinCounter(20)
+            myFunction(1)
+        }, 15000)
+        content = (
+            <>
+                <View style={styles.overallContainerWin}>
+                    <Image
+                        source={entranceGif}
+                        style={{
+                            width: 400,
+                            height: 600,
+                            resizeMode: 'stretch'
+                        }}
+                    />
                 </View>
             </>
         )
