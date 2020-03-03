@@ -46,7 +46,6 @@ const DiagonAlley = (props) => {
             .then((response) => response.json())
             .then((responseJson) => {
               setUser(responseJson)
-              console.log('responseJson: ', responseJson)
               if (responseJson.events.length > 0) {
                   setWinCounter(20)
                   myFunction(1)
@@ -64,8 +63,6 @@ const DiagonAlley = (props) => {
                 let y = Math.floor(Math.random() * Math.floor(750))
                 setLeftOffset(x)
                 setTopOffset(y)
-                console.log('interval tick')
-                console.log(user)
             }
             myInterval = setInterval(changeLocationOfBrick, 1000)
         } else {
@@ -135,7 +132,7 @@ const DiagonAlley = (props) => {
         setTimeout( () => {
             setWinCounter(20)
             myFunction(1)
-            console.log('in the timeout ', props.user.email)
+
             // send a 'mission accomplished' to backend
             fetch('http://10.1.7.200:3001/auth/diagonalley', {
                 method: 'POST',

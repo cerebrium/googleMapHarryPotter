@@ -4,13 +4,13 @@ const User = require('../models/user')
 
 // Storing user data in the database for team creation and checking
 router.post('/signup', (req, res) => {
-    console.log('hit this route', req.body)
-    // console.log('inside the db posting route', req.body.email)
     // find user based on email
     User.findOne({ email: req.body.email }, (err, user) => {
+
         // if user found wont write anything, else going to write to db
        if (user) {
            res.json(user)
+
        } else {
             let user = new User(req.body)
             user.save();
@@ -21,19 +21,17 @@ router.post('/signup', (req, res) => {
 
 router.post('/diagonalley', (req, res) => {
     // find user
-    console.log('route hit req: ', req.body)
     User.findOne({ email: req.body.email }, (err, user) => {
-        console.log('route hit and user found: ', user)
+
         if (user.events) {
             let currentUserEvents = [...user.events]
             currentUserEvents.push(0)
             user.events = currentUserEvents
             user.save()
-            console.log('user: ', user)
+
         } else {
             user.events = [0]
             user.save()
-            console.log('user: ', user)
         }
         res.json(user)
     })

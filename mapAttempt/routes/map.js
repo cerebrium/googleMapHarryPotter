@@ -4,9 +4,12 @@ import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import { NativeRouter as Router, Route, Link } from "react-router-native"
 import Geolocation from '@react-native-community/geolocation';
 
-const MapPage = () => {
+const MapPage = (props) => {
   const [ userLatitude, setUserLatitude ] = useState(0)
   const [ userLongitude, setUserLongitude ] = useState(0)
+  const [ user, setUser ] = useState(null)
+  const [ markerLat, setMarkerLat ] = useState(47.6048)
+  const [ markerLong, setMarkerLong ] = useState(-122.3375)
 
   useEffect( ()=> {
     try {
@@ -27,6 +30,27 @@ const MapPage = () => {
     } catch (error) {
       console.log('error: ', error)
     }
+
+    fetch('http://10.1.7.200:3001/auth/signup', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: props.user.name,
+        email: props.user.email,
+      }),
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      setUser(responseJson)
+      // setting which marker should show up
+      if (responseJson.events.length > 0) {
+        setMarkerLat(47.6155)
+        setMarkerLong(-122.3398)
+      }
+    })
   }, [])
 
   var content
@@ -51,8 +75,8 @@ const MapPage = () => {
         >
           <MapView.Marker 
             coordinate={{
-              latitude: 47.6048,
-              longitude: -122.3375
+              latitude: markerLat,
+              longitude: markerLong
             }}  
             title={'First Location'}
             description={'Locate the secret entrance to Diagon Alley!'}
@@ -101,4 +125,7 @@ const styles = StyleSheet.create({
 export default MapPage;
 
 // bubble gum wall
-// Latitude: 47.6048 Longitude: -122.3375.
+// Latitude: 47.6048 Longitude: -122.3375
+
+// amazon spheres
+// Latitude: 47.6155 Longitude: 122.3398
